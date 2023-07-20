@@ -12,11 +12,11 @@ class QuestionController extends BaseController {
     try {
       const [question] = await this.model.getQuestionWithAnswers(id);
       if (!question) {
-        return res.status(404).json({ message: 'Question not found' });
+        return this.res.status(404).json({ message: 'Question not found' });
       }
-      return res.status(200).json(question);
+      return this.res.status(200).json(question);
     } catch (err) {
-      return res.status(500).json({ message: err.message });
+      return this.res.status(500).json({ message: err.message });
     }
   }
 }

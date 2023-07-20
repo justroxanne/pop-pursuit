@@ -7,7 +7,7 @@ class QuestionModel extends BaseModel {
 
   async getQuestionWithAnswers(id) {
     return this.db.query(
-      `SELECT * FROM question INNER JOIN answer ON question.id = answer.question_id WHERE question.id = ?`,
+      `SELECT question.*, answer.* FROM question INNER JOIN answer ON question.id = answer.question_id WHERE question.id = ?`,
       [id]
     );
   }
