@@ -5,7 +5,7 @@ import { RiCloseFill } from 'react-icons/ri';
 import './history.css';
 
 const History = () => {
-  const { questions, answersHistory } = useContext(QuizContext);
+  const { answersHistory } = useContext(QuizContext);
 
   return (
     <div className='history'>

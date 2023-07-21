@@ -37,6 +37,7 @@ const Question = () => {
     const randomIndex = Math.floor(Math.random() * questions.length);
     const randomQuestion = questions[randomIndex];
     setCurrentQuestion(randomQuestion);
+    setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
 
     axios
       .get(`${url}/api/answers/question/${randomQuestion.id}`)
@@ -54,40 +55,44 @@ const Question = () => {
       return;
     }
 
-    const selectedAnswer = answers.find(
-      (answer) => answer.text === pickedAnswer
-    );
-    if (selectedAnswer && selectedAnswer.is_good_answer) {
-      setScore(score + 1);
+    if (pickedAnswer && currentQuestion) {
+      const selectedAnswer = answers.find(
+        (answer) => answer.text === pickedAnswer
+      );
+      if (selectedAnswer && selectedAnswer.is_good_answer) {
+        setScore(score + 1);
+      }
+
+      const randomIndex = Math.floor(Math.random() * questions.length);
+      const randomQuestion = questions[randomIndex];
+
+      const responseObj = {
+        id: selectedAnswer.id,
+        question_id: currentQuestion.id,
+        text: pickedAnswer,
+        is_good_answer: selectedAnswer.is_good_answer,
+      };
+
+      if (askedQuestionIds.includes(randomQuestion.id)) {
+        sendResponseAndPassToNext();
+        return;
+      }
+      setCurrentQuestion(randomQuestion);
+      setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
+      setAnswersHistory([...answersHistory, responseObj]);
+
+      axios
+        .get(`${url}/api/answers/question/${randomQuestion.id}`)
+        .then((res) => {
+          setAnswers(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const randomQuestion = questions[randomIndex];
-
-    const responseObj = {
-      id: selectedAnswer.id,
-      question_id: currentQuestion.id,
-      text: pickedAnswer,
-      is_good_answer: selectedAnswer.is_good_answer,
-    };
-
-    if (askedQuestionIds.includes(randomQuestion.id)) {
-      sendResponseAndPassToNext();
-      return;
-    }
-    setCurrentQuestion(randomQuestion);
-    setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
-    setAnswersHistory([...answersHistory, responseObj]);
-
-    axios
-      .get(`${url}/api/answers/question/${randomQuestion.id}`)
-      .then((res) => {
-        setAnswers(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
+
+  console.log('askedQuestionIds', askedQuestionIds);
 
   return (
     <div className='questions'>
@@ -110,7 +115,16 @@ const Question = () => {
           </ul>
         </div>
       ) : (
-        <h2>Prêt ?</h2>
+        <h2
+          style={{
+            fontSize: '3em',
+            alignSelf: 'center',
+            height: '30%',
+            marginTop: '2em',
+          }}
+        >
+          Prêt ?
+        </h2>
       )}
       <button
         className='next-step-btn'
