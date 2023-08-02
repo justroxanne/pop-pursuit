@@ -15,10 +15,12 @@ const Question = () => {
     setQuestions,
     answersHistory,
     setAnswersHistory,
+    setIsGameEnded,
   } = useContext(QuizContext);
 
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [alert, setAlert] = useState(false);
 
   useEffect(() => {
     httpService.get('/questions').then(setQuestions).catch(console.error);
@@ -37,15 +39,24 @@ const Question = () => {
   };
 
   const sendResponseAndPassToNext = () => {
+    const selectedAnswer = answers.find(
+      (answer) => answer.text === pickedAnswer
+    );
+
     if (askedQuestionIds.length === questions.length) {
-      alert('Toutes les questions ont été posées. Le quiz est terminé.');
+      if (selectedAnswer && selectedAnswer.is_good_answer) {
+        setScore(score + 1);
+      }
+      setIsGameEnded(true);
       return;
     }
 
     if (pickedAnswer && currentQuestion) {
-      const selectedAnswer = answers.find(
-        (answer) => answer.text === pickedAnswer
-      );
+      if (!selectedAnswer) {
+        setAlert(true);
+        return;
+      }
+
       if (selectedAnswer && selectedAnswer.is_good_answer) {
         setScore(score + 1);
       }
@@ -67,11 +78,14 @@ const Question = () => {
       setCurrentQuestion(randomQuestion);
       setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
       setAnswersHistory([...answersHistory, responseObj]);
+      setAlert(false);
 
       httpService
         .get(`/answers/question/${randomQuestion.id}`)
         .then(setAnswers)
         .catch(console.error);
+    } else {
+      setAlert(true);
     }
   };
 
@@ -107,6 +121,7 @@ const Question = () => {
           Prêt ?
         </h2>
       )}
+      {alert && <div className='alert'>Choisis une réponse !</div>}
       <button
         className='next-step-btn'
         onClick={currentQuestion ? sendResponseAndPassToNext : startQuiz}

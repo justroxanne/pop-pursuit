@@ -8,6 +8,7 @@ export const QuizProvider = ({ children }) => {
   const [answersHistory, setAnswersHistory] = useState([]);
   const [score, setScore] = useState(0);
   const [questions, setQuestions] = useState([]);
+  const [isGameEnded, setIsGameEnded] = useState(false);
 
   return (
     <QuizContext.Provider
@@ -22,6 +23,8 @@ export const QuizProvider = ({ children }) => {
         setQuestions,
         answersHistory,
         setAnswersHistory,
+        isGameEnded,
+        setIsGameEnded,
       }}
     >
       {children}

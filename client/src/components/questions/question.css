@@ -3,6 +3,7 @@
   width: 70%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 2em;
   position: relative;
 }
@@ -20,6 +21,18 @@
 
 .question-container h4 {
   font-size: 2em;
+}
+
+.alert {
+  border: 2px solid red;
+  width: 50%;
+  height: 2em;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 5em;
 }
 
 .question-container ul {
@@ -41,8 +54,8 @@
 
 input[type='radio'] {
   appearance: none;
-  width: 1.5em;
-  height: 1.5em;
+  min-width: 20px;
+  height: 20px;
   border: 2px solid yellow;
   cursor: pointer;
 }
@@ -53,8 +66,8 @@ input[type='radio']:checked {
 
 .next-step-btn {
   border: 2px solid yellow;
-  width: 30%;
-  padding: 0.3em;
+  width: fit-content;
+  padding: 0.5em;
   color: yellow;
   font-size: 1.5em;
   align-self: center;
@@ -67,8 +80,18 @@ input[type='radio']:checked {
 }
 
 .score {
-  position: absolute;
-  bottom: 1em;
-  left: 1em;
+  align-self: flex-start;
   font-size: 2em;
+  padding: 1em;
+}
+
+@media screen and (max-width: 900px) {
+  .questions {
+    width: 100%;
+    height: 75vh;
+  }
+
+  .score {
+    position: initial;
+  }
 }
