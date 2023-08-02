@@ -1,12 +1,12 @@
 import React from 'react';
-import Home from './pages/Home';
 import './App.css';
+import Quiz from './components/quiz/Quiz';
 
 function App() {
   return (
     <div className='app'>
       <h1>Pop Pursuit</h1>
-      <Home />
+      <Quiz />
     </div>
   );
 }
