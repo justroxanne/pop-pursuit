@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { QuizContext } from '../../contexts/QuizContext';
-import axios from 'axios';
+import httpService from '../../services/httpService';
 import './question.css';
 
 const Question = () => {
@@ -20,17 +20,8 @@ const Question = () => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
 
-  const url = import.meta.env.VITE_API_URL;
-
   useEffect(() => {
-    axios
-      .get(`${url}/api/questions`)
-      .then((res) => {
-        setQuestions(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    httpService.get('/questions').then(setQuestions).catch(console.error);
   }, []);
 
   const startQuiz = () => {
@@ -39,14 +30,10 @@ const Question = () => {
     setCurrentQuestion(randomQuestion);
     setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
 
-    axios
-      .get(`${url}/api/answers/question/${randomQuestion.id}`)
-      .then((res) => {
-        setAnswers(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    httpService
+      .get(`/answers/question/${randomQuestion.id}`)
+      .then(setAnswers)
+      .catch(console.error);
   };
 
   const sendResponseAndPassToNext = () => {
@@ -81,18 +68,12 @@ const Question = () => {
       setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
       setAnswersHistory([...answersHistory, responseObj]);
 
-      axios
-        .get(`${url}/api/answers/question/${randomQuestion.id}`)
-        .then((res) => {
-          setAnswers(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      httpService
+        .get(`/answers/question/${randomQuestion.id}`)
+        .then(setAnswers)
+        .catch(console.error);
     }
   };
-
-  console.log('askedQuestionIds', askedQuestionIds);
 
   return (
     <div className='questions'>
