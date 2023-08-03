@@ -1,6 +1,8 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 const questionRouter = require('./routes/question.routes');
 const categoryRouter = require('./routes/category.routes');
