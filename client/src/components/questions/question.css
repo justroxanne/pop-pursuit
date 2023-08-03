@@ -88,7 +88,7 @@ input[type='radio']:checked {
 @media screen and (max-width: 900px) {
   .questions {
     width: 100%;
-    height: 75vh;
+    height: auto;
   }
 
   .score {
