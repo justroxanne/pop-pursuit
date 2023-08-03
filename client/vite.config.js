@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': 'https://pop-pursuit-api.vercel.app',
+      '/api': 'http://pop-pursuit-api.vercel.app',
     },
   },
 });
