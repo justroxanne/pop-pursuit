@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://pop-pursuit-api.vercel.app/api';
+axios.defaults.baseURL = '/api';
 
 export default {
   get: function (str) {
