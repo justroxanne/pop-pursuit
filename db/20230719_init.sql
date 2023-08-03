@@ -25,7 +25,7 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `pop_pursuit`.`question`
+-- Table `pop-pursuit`.`question`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pop_pursuit`.`question` (
   `id` INT NOT NULL AUTO_INCREMENT,
