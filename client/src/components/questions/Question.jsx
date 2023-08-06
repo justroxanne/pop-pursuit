@@ -88,11 +88,6 @@ const Question = () => {
       setAlert(false);
 
       getAnswersByQuestionId(randomQuestion.id);
-
-      // httpService
-      //   .get(`/answers/question/${randomQuestion.id}`)
-      //   .then(setAnswers)
-      //   .catch(console.error);
     } else {
       setAlert(true);
     }
