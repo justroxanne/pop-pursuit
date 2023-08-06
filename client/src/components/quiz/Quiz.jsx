@@ -9,7 +9,6 @@ const Quiz = () => {
   const { isGameEnded } = useContext(QuizContext);
   return (
     <div className='quiz-container'>
-      {isGameEnded && <EndGame />}
       <History />
       <Question />
     </div>

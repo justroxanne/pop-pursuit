@@ -9,9 +9,12 @@ const EndGame = () => {
   const [color, setColor] = useState(null);
 
   useEffect(() => {
-    if (score < questions.length / 2.5) {
-      setMessage('Tu peux mieux faire !');
+    if (score === 0) {
+      setMessage('Tu as vraiment essayé ?');
       setColor('red');
+    } else if (score < questions.length / 2.5) {
+      setMessage('Tu peux mieux faire !');
+      setColor('pink');
     } else if (
       score < questions.length / 1.25 &&
       score >= questions.length / 2.5

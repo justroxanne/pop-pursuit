@@ -2,8 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { QuizContext } from '../../contexts/QuizContext';
 import httpService from '../../services/httpService';
 import './question.css';
-
+import EndGame from '../endGame/EndGame';
 const Question = () => {
+  const { isGameEnded } = useContext(QuizContext);
   const {
     askedQuestionIds,
     setAskedQuestionIds,
@@ -20,11 +21,20 @@ const Question = () => {
 
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [answersChoices, setAnswersChoices] = useState([]);
   const [alert, setAlert] = useState(false);
 
   useEffect(() => {
     httpService.get('/questions').then(setQuestions).catch(console.error);
+    httpService.get('/answers').then(setAnswers).catch(console.error);
   }, []);
+
+  const getAnswersByQuestionId = (questionId) => {
+    const conrespondingAnswers = answers.filter(
+      (answer) => answer.question_id === questionId
+    );
+    setAnswersChoices(conrespondingAnswers);
+  };
 
   const startQuiz = () => {
     const randomIndex = Math.floor(Math.random() * questions.length);
@@ -32,14 +42,11 @@ const Question = () => {
     setCurrentQuestion(randomQuestion);
     setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
 
-    httpService
-      .get(`/answers/question/${randomQuestion.id}`)
-      .then(setAnswers)
-      .catch(console.error);
+    getAnswersByQuestionId(randomQuestion.id);
   };
 
   const sendResponseAndPassToNext = () => {
-    const selectedAnswer = answers.find(
+    const selectedAnswer = answersChoices.find(
       (answer) => answer.text === pickedAnswer
     );
 
@@ -80,10 +87,12 @@ const Question = () => {
       setAnswersHistory([...answersHistory, responseObj]);
       setAlert(false);
 
-      httpService
-        .get(`/answers/question/${randomQuestion.id}`)
-        .then(setAnswers)
-        .catch(console.error);
+      getAnswersByQuestionId(randomQuestion.id);
+
+      // httpService
+      //   .get(`/answers/question/${randomQuestion.id}`)
+      //   .then(setAnswers)
+      //   .catch(console.error);
     } else {
       setAlert(true);
     }
@@ -91,11 +100,12 @@ const Question = () => {
 
   return (
     <div className='questions'>
+      {isGameEnded && <EndGame />}
       {currentQuestion ? (
         <div className='question-container'>
           <h4>{currentQuestion.text}</h4>
           <ul>
-            {answers.map((answer) => (
+            {answersChoices.map((answer) => (
               <li key={answer.id}>
                 <input
                   type='radio'
