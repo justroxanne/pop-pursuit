@@ -43,5 +43,11 @@
 @media screen and (max-width: 900px) {
   .end-game {
     width: 80%;
+    height: 80%;
+  }
+
+  .final-message,
+  .final-score {
+    font-size: 2.5em;
   }
 }
