@@ -109,7 +109,7 @@ const Question = () => {
                   value={answer.text}
                   onChange={(e) => setPickedAnswer(e.target.value)}
                 />
-                {answer.text}
+                <label htmlFor={`${answer.id}`}>{answer.text}</label>
               </li>
             ))}
           </ul>
