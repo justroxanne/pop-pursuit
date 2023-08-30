@@ -14,19 +14,27 @@ const Question = () => {
     score,
     setScore,
     questions,
+    setQuestions,
     answersHistory,
     setAnswersHistory,
     setIsGameEnded,
   } = useContext(QuizContext);
 
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [answers, setAnswers] = useState([]);
   const [answersChoices, setAnswersChoices] = useState([]);
   const [alert, setAlert] = useState(false);
 
+  useEffect(() => {
+    httpService.get('/questions').then(setQuestions).catch(console.error);
+    httpService.get('/answers').then(setAnswers).catch(console.error);
+  }, []);
+
   const getAnswersByQuestionId = (questionId) => {
-    httpService.get(`/answers/question/${questionId}`).then((res) => {
-      setAnswersChoices(res);
-    });
+    const correspondingAnswers = answers.filter(
+      (answer) => answer.question_id === questionId
+    );
+    setAnswersChoices(correspondingAnswers);
   };
 
   const startQuiz = () => {
