@@ -26,6 +26,7 @@ const Question = () => {
   const [alert, setAlert] = useState(false);
 
   useEffect(() => {
+    console.log('render');
     httpService.get('/questions').then(setQuestions).catch(console.error);
     httpService.get('/answers').then(setAnswers).catch(console.error);
   }, []);
@@ -94,8 +95,6 @@ const Question = () => {
     });
   };
 
-  console.log(answersHistory);
-
   return (
     <div className='questions'>
       {isGameEnded && <EndGame />}
@@ -104,7 +103,7 @@ const Question = () => {
           <h4>{currentQuestion.text}</h4>
           <ul>
             {answersChoices.map((answer) => (
-              <li key={answer.id}>
+              <li key={answer.id} className='answer-btn'>
                 <input
                   type='radio'
                   name='answer'
