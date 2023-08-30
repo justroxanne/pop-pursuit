@@ -6,9 +6,10 @@ class AnswerModel extends BaseModel {
   }
 
   async getAnswersByQuestionId(questionId) {
-    return this.db.query(`SELECT * FROM answer WHERE question_id = ?`, [
-      questionId,
-    ]);
+    return this.db.query(
+      `SELECT id, text, question_id FROM answer WHERE question_id = ?`,
+      [questionId]
+    );
   }
 }
 

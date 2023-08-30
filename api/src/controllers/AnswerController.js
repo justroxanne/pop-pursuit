@@ -19,6 +19,23 @@ class AnswerController extends BaseController {
       return this.res.status(500).json({ message: err.message });
     }
   }
+
+  async verifyAnswer() {
+    const { id } = this.req.params;
+    try {
+      const [selectedAnswer] = await this.model.getOne({ id });
+      if (!selectedAnswer) {
+        return this.res.status(404).json({ message: 'Answer not found' });
+      }
+      if (selectedAnswer[0].is_good_answer) {
+        return this.res.status(200).json({ isCorrect: true });
+      } else {
+        return this.res.status(200).json({ isCorrect: false });
+      }
+    } catch (err) {
+      return this.res.status(500).json({ message: err.message });
+    }
+  }
 }
 
 module.exports = AnswerController;

@@ -11,6 +11,10 @@ answerRouter.get('/answers/:id', async (req, res) => {
   new AnswerController(req, res).getOne();
 });
 
+answerRouter.get('/answers/verify/:id', async (req, res) => {
+  new AnswerController(req, res).verifyAnswer();
+});
+
 answerRouter.get('/answers/question/:id', async (req, res) => {
   new AnswerController(req, res).getAnswersByQuestionId();
 });

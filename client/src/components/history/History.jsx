@@ -21,11 +21,11 @@ const History = () => {
         {answersHistory.map((answer, index) => (
           <li
             key={answer.id}
-            style={{ color: answer.is_good_answer ? '#44FF00' : 'red' }}
+            style={{ color: answer.isCorrect ? '#44FF00' : 'red' }}
             className='choosen-answer-container'
           >
             {index + 1}. {answer.text}{' '}
-            {answer.is_good_answer ? <BiCheck /> : <RiCloseFill />}
+            {answer.isCorrect ? <BiCheck /> : <RiCloseFill />}
           </li>
         ))}
       </ul>
