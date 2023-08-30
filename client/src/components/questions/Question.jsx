@@ -26,7 +26,6 @@ const Question = () => {
   const [alert, setAlert] = useState(false);
 
   useEffect(() => {
-    console.log('render');
     httpService.get('/questions').then(setQuestions).catch(console.error);
     httpService.get('/answers').then(setAnswers).catch(console.error);
   }, []);
