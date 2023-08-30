@@ -52,7 +52,7 @@
   font-size: 1.7em;
 }
 
-.answer-btn {
+.answer-label {
   cursor: pointer;
 }
 
@@ -61,6 +61,7 @@ input[type='radio'] {
   min-width: 20px;
   height: 20px;
   border: 2px solid yellow;
+  cursor: pointer;
 }
 
 input[type='radio']:checked {

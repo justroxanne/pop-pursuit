@@ -103,7 +103,7 @@ const Question = () => {
           <h4>{currentQuestion.text}</h4>
           <ul>
             {answersChoices.map((answer) => (
-              <li key={answer.id} className='answer-btn'>
+              <li key={answer.id}>
                 <input
                   type='radio'
                   name='answer'
@@ -116,7 +116,9 @@ const Question = () => {
                     })
                   }
                 />
-                <label htmlFor={answer.id}>{answer.text}</label>
+                <label htmlFor={answer.id} className='answer-label'>
+                  {answer.text}
+                </label>
               </li>
             ))}
           </ul>
