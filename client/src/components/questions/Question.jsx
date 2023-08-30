@@ -3,6 +3,7 @@ import { QuizContext } from '../../contexts/QuizContext';
 import httpService from '../../services/httpService';
 import './question.css';
 import EndGame from '../endGame/EndGame';
+
 const Question = () => {
   const { isGameEnded } = useContext(QuizContext);
   const {
@@ -13,27 +14,19 @@ const Question = () => {
     score,
     setScore,
     questions,
-    setQuestions,
     answersHistory,
     setAnswersHistory,
     setIsGameEnded,
   } = useContext(QuizContext);
 
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [answers, setAnswers] = useState([]);
   const [answersChoices, setAnswersChoices] = useState([]);
   const [alert, setAlert] = useState(false);
 
-  useEffect(() => {
-    httpService.get('/questions').then(setQuestions).catch(console.error);
-    httpService.get('/answers').then(setAnswers).catch(console.error);
-  }, []);
-
   const getAnswersByQuestionId = (questionId) => {
-    const conrespondingAnswers = answers.filter(
-      (answer) => answer.question_id === questionId
-    );
-    setAnswersChoices(conrespondingAnswers);
+    httpService.get(`/answers/question/${questionId}`).then((res) => {
+      setAnswersChoices(res);
+    });
   };
 
   const startQuiz = () => {
@@ -46,52 +39,54 @@ const Question = () => {
   };
 
   const sendResponseAndPassToNext = () => {
-    const selectedAnswer = answersChoices.find(
-      (answer) => answer.text === pickedAnswer
-    );
+    httpService.get(`/answers/verify/${pickedAnswer.id}`).then((res) => {
+      const isCorrect = res.isCorrect;
 
-    if (askedQuestionIds.length === questions.length) {
-      if (selectedAnswer && selectedAnswer.is_good_answer) {
-        setScore(score + 1);
+      if (askedQuestionIds.length === questions.length) {
+        if (pickedAnswer && isCorrect) {
+          setScore(score + 1);
+        }
+        setIsGameEnded(true);
+        return;
       }
-      setIsGameEnded(true);
-      return;
-    }
 
-    if (pickedAnswer && currentQuestion) {
-      if (!selectedAnswer) {
+      if (pickedAnswer && currentQuestion) {
+        if (!pickedAnswer) {
+          setAlert(true);
+          return;
+        }
+
+        if (pickedAnswer && isCorrect) {
+          setScore(score + 1);
+        }
+
+        const randomIndex = Math.floor(Math.random() * questions.length);
+        const randomQuestion = questions[randomIndex];
+
+        const responseObj = {
+          id: pickedAnswer.id,
+          question_id: currentQuestion.id,
+          text: pickedAnswer.text,
+          isCorrect: isCorrect,
+        };
+
+        if (askedQuestionIds.includes(randomQuestion.id)) {
+          sendResponseAndPassToNext();
+          return;
+        }
+        setCurrentQuestion(randomQuestion);
+        setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
+        setAnswersHistory([...answersHistory, responseObj]);
+        setAlert(false);
+
+        getAnswersByQuestionId(randomQuestion.id);
+      } else {
         setAlert(true);
-        return;
       }
-
-      if (selectedAnswer && selectedAnswer.is_good_answer) {
-        setScore(score + 1);
-      }
-
-      const randomIndex = Math.floor(Math.random() * questions.length);
-      const randomQuestion = questions[randomIndex];
-
-      const responseObj = {
-        id: selectedAnswer.id,
-        question_id: currentQuestion.id,
-        text: pickedAnswer,
-        is_good_answer: selectedAnswer.is_good_answer,
-      };
-
-      if (askedQuestionIds.includes(randomQuestion.id)) {
-        sendResponseAndPassToNext();
-        return;
-      }
-      setCurrentQuestion(randomQuestion);
-      setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
-      setAnswersHistory([...answersHistory, responseObj]);
-      setAlert(false);
-
-      getAnswersByQuestionId(randomQuestion.id);
-    } else {
-      setAlert(true);
-    }
+    });
   };
+
+  console.log(answersHistory);
 
   return (
     <div className='questions'>
@@ -107,7 +102,12 @@ const Question = () => {
                   name='answer'
                   id={answer.id}
                   value={answer.text}
-                  onChange={(e) => setPickedAnswer(e.target.value)}
+                  onChange={(e) =>
+                    setPickedAnswer({
+                      text: e.target.value,
+                      id: parseInt(e.target.id),
+                    })
+                  }
                 />
                 <label htmlFor={answer.id}>{answer.text}</label>
               </li>
