@@ -4,7 +4,7 @@ const AnswerController = require('../controllers/AnswerController');
 const answerRouter = express.Router();
 
 answerRouter.get('/answers', async (req, res) => {
-  new AnswerController(req, res).getAll();
+  new AnswerController(req, res).getAllAnswers();
 });
 
 answerRouter.get('/answers/:id', async (req, res) => {

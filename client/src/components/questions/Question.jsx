@@ -5,7 +5,6 @@ import './question.css';
 import EndGame from '../endGame/EndGame';
 
 const Question = () => {
-  const { isGameEnded } = useContext(QuizContext);
   const {
     askedQuestionIds,
     setAskedQuestionIds,
@@ -16,26 +15,24 @@ const Question = () => {
     questions,
     answersHistory,
     setAnswersHistory,
+    isGameEnded,
     setIsGameEnded,
   } = useContext(QuizContext);
 
+  console.log(typeof questions);
+
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [answersChoices, setAnswersChoices] = useState([]);
   const [alert, setAlert] = useState(false);
 
-  const getAnswersByQuestionId = (questionId) => {
-    httpService.get(`/answers/question/${questionId}`).then((res) => {
-      setAnswersChoices(res);
-    });
-  };
-
   const startQuiz = () => {
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const randomQuestion = questions[randomIndex];
-    setCurrentQuestion(randomQuestion);
-    setAskedQuestionIds([...askedQuestionIds, randomQuestion.id]);
+    for (let i = 0; i < questions.length; i++) {
+      const question = questions.allQuestions[0];
 
-    getAnswersByQuestionId(randomQuestion.id);
+      if (!askedQuestionIds.includes(question.id)) {
+        setCurrentQuestion(question);
+        setAskedQuestionIds([...askedQuestionIds, question.id]);
+      }
+    }
   };
 
   const sendResponseAndPassToNext = () => {
@@ -85,8 +82,6 @@ const Question = () => {
       }
     });
   };
-
-  console.log(answersHistory);
 
   return (
     <div className='questions'>

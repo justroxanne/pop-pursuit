@@ -7,6 +7,15 @@ class AnswerController extends BaseController {
     this.model = new AnswerModel();
   }
 
+  async getAllAnswers() {
+    try {
+      const [answers] = await this.model.getAllAnswers();
+      return this.res.status(200).json(answers);
+    } catch (err) {
+      return this.res.status(500).json({ message: err.message });
+    }
+  }
+
   async getAnswersByQuestionId() {
     const { id } = this.req.params;
     try {

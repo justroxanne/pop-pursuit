@@ -7,16 +7,23 @@ class QuestionController extends BaseController {
     this.model = new QuestionModel();
   }
 
-  async getQuestionWithAnswers() {
-    const { id } = req.params;
+  async getAllQuestionsWithAnswers() {
     try {
-      const [question] = await this.model.getQuestionWithAnswers(id);
-      if (!question) {
-        return this.res.status(404).json({ message: 'Question not found' });
-      }
-      return this.res.status(200).json(question);
+      const [response] = await this.model.getAllQuestionsWithAnswers();
+
+      const allQuestions = response.map((question) => {
+        return {
+          questionId: question.questionId,
+          questionText: question.questionText,
+          questionCategoryId: question.questionCategoryId,
+          answers: question.answers,
+        };
+      });
+      this.res.status(200).json({
+        allQuestions,
+      });
     } catch (err) {
-      return this.res.status(500).json({ message: err.message });
+      this.res.status(500).json({ message: err.message });
     }
   }
 }
