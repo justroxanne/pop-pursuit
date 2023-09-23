@@ -8,9 +8,9 @@ class QuestionModel extends BaseModel {
   async getAllQuestionsWithAnswers() {
     return this.db.query(
       `SELECT
-        question.id AS questionId,
-        question.text AS questionText,
-        question.category_id AS questionCategoryId,
+        question.id AS id,
+        question.text AS text,
+        question.category_id AS categoryId,
       JSON_ARRAYAGG(JSON_OBJECT('id', answer.id, 'text', answer.text)) AS answers
       FROM question
       INNER JOIN answer ON question.id = answer.question_id
