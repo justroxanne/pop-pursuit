@@ -4,7 +4,7 @@ const QuestionController = require('../controllers/QuestionController');
 const questionRouter = express.Router();
 
 questionRouter.get('/questions', async (req, res) => {
-  new QuestionController(req, res).getAll();
+  new QuestionController(req, res).getAllQuestionsWithAnswers();
 });
 
 questionRouter.get('/questions/:id', async (req, res) => {

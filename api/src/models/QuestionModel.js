@@ -5,10 +5,17 @@ class QuestionModel extends BaseModel {
     super('question', db);
   }
 
-  async getQuestionWithAnswers(id) {
+  async getAllQuestionsWithAnswers() {
     return this.db.query(
-      `SELECT question.*, answer.* FROM question INNER JOIN answer ON question.id = answer.question_id WHERE question.id = ?`,
-      [id]
+      `SELECT
+        question.id AS id,
+        question.text AS text,
+        question.category_id AS categoryId,
+      JSON_ARRAYAGG(JSON_OBJECT('id', answer.id, 'text', answer.text)) AS answers
+      FROM question
+      INNER JOIN answer ON question.id = answer.question_id
+      GROUP BY question.id, question.text, question.category_id
+      ORDER BY RAND();`
     );
   }
 
@@ -19,5 +26,4 @@ class QuestionModel extends BaseModel {
     );
   }
 }
-
 module.exports = QuestionModel;

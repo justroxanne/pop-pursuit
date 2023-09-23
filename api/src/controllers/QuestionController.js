@@ -7,16 +7,13 @@ class QuestionController extends BaseController {
     this.model = new QuestionModel();
   }
 
-  async getQuestionWithAnswers() {
-    const { id } = req.params;
+  async getAllQuestionsWithAnswers() {
     try {
-      const [question] = await this.model.getQuestionWithAnswers(id);
-      if (!question) {
-        return this.res.status(404).json({ message: 'Question not found' });
-      }
-      return this.res.status(200).json(question);
+      const [questions] = await this.model.getAllQuestionsWithAnswers();
+
+      return this.res.status(200).json(questions);
     } catch (err) {
-      return this.res.status(500).json({ message: err.message });
+      this.res.status(500).json({ message: err.message });
     }
   }
 }
