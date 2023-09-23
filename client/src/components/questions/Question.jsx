@@ -15,6 +15,7 @@ const Question = () => {
     score,
     setScore,
     questions,
+    setQuestions,
     answersHistory,
     setAnswersHistory,
     isGameEnded,
@@ -39,8 +40,6 @@ const Question = () => {
 
     httpService.get(`/answers/verify/${pickedAnswer.id}`).then((res) => {
       const isCorrect = res.isCorrect;
-
-      /** Stop the game if all the questions are answered */
 
       if (askedQuestionIds.length === questions.length) {
         if (pickedAnswer && isCorrect) {
@@ -79,14 +78,13 @@ const Question = () => {
     });
   };
 
-  console.log(pickedAnswer);
-
   return (
     <div className='questions'>
       {isGameEnded && <EndGame />}
       {currentQuestion ? (
         <div className='question-container'>
           <h4>{currentQuestion.text}</h4>
+
           <Answer
             currentQuestion={currentQuestion}
             setPickedAnswer={setPickedAnswer}
